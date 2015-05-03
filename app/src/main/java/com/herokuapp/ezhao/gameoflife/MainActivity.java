@@ -1,16 +1,53 @@
 package com.herokuapp.ezhao.gameoflife;
 
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
-public class MainActivity extends ActionBarActivity {
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class MainActivity extends FragmentActivity {
+    Button btnPlay;
+    Button btnLoop;
+    GameOfLifeView golCanvas;
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        btnPlay = (Button) findViewById(R.id.btnPlay);
+        btnLoop = (Button) findViewById(R.id.btnLoop);
+        golCanvas = (GameOfLifeView) findViewById(R.id.golCanvas);
+
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                golCanvas.play();
+            }
+        });
+        btnLoop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (timer != null) {
+                    timer.cancel();
+                    timer = null;
+                } else {
+                    timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            golCanvas.play();
+                        }
+                    }, 0, 100);
+                }
+            }
+        });
     }
 
     @Override

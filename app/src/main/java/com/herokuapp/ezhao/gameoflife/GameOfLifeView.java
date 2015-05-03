@@ -1,7 +1,6 @@
 package com.herokuapp.ezhao.gameoflife;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class GameOfLifeView extends View {
-    private final String TAG = "GameOfLifeView";
     private final int GRIDSIZE = 32;
     private Paint pixelPaint;
     private Paint guidePaint;
@@ -33,6 +31,59 @@ public class GameOfLifeView extends View {
         guidePaint.setColor(Color.LTGRAY);
 
         points = new int[GRIDSIZE][GRIDSIZE];
+    }
+
+    public void play() {
+        // Count # of live neighbors for each point
+        int[][] liveNeighbors = new int[GRIDSIZE][GRIDSIZE];
+        for (int x=0; x < GRIDSIZE; x++) {
+            for (int y=0; y < GRIDSIZE; y++) {
+                if (points[x][y] == 1) {
+                    if (x > 0) {
+                        liveNeighbors[x-1][y] = liveNeighbors[x-1][y]+1;
+                        if (y > 0) {
+                            liveNeighbors[x-1][y-1] = liveNeighbors[x-1][y-1]+1;
+                        }
+                        if (y < GRIDSIZE - 1) {
+                            liveNeighbors[x-1][y+1] = liveNeighbors[x-1][y+1]+1;
+                        }
+                    }
+                    if (x < GRIDSIZE - 1) {
+                        liveNeighbors[x+1][y] = liveNeighbors[x+1][y]+1;
+                        if (y > 0) {
+                            liveNeighbors[x+1][y-1] = liveNeighbors[x+1][y-1]+1;
+                        }
+                        if (y < GRIDSIZE - 1) {
+                            liveNeighbors[x+1][y+1] = liveNeighbors[x+1][y+1]+1;
+                        }
+                    }
+                    if (y > 0) {
+                        liveNeighbors[x][y-1] = liveNeighbors[x][y-1]+1;
+                    }
+                    if (y < GRIDSIZE - 1) {
+                        liveNeighbors[x][y+1] = liveNeighbors[x][y+1]+1;
+                    }
+                }
+            }
+        }
+
+        // Apply Game of Life rules en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+        for (int x=0; x < GRIDSIZE; x++) {
+            for (int y = 0; y < GRIDSIZE; y++) {
+                if (points[x][y] == 0 && liveNeighbors[x][y] == 3) {
+                    // Dead cell with exactly 3 neighbors comes alive
+                    points[x][y] = 1;
+                } else if (points[x][y] == 1) {
+                    if (liveNeighbors[x][y] < 2 || liveNeighbors[x][y] > 3) {
+                        // Live cell with too few or too many neighbors dies
+                        points[x][y] = 0;
+                    }
+                    // Otherwise live cell stays alive
+                }
+            }
+        }
+
+        postInvalidate();
     }
 
     @Override

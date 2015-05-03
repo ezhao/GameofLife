@@ -8,7 +8,7 @@
         android:id="@+id/golCanvas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnTest"
+        android:layout_above="@+id/btnPlay"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
@@ -16,9 +16,18 @@
         android:layout_alignParentLeft="true" />
 
     <Button
-        android:id="@+id/btnTest"
+        android:id="@+id/btnPlay"
         android:text="@string/play"
         android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnLoop"
+        android:text="@string/loop"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/btnPlay"
+        android:layout_toEndOf="@id/btnPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
