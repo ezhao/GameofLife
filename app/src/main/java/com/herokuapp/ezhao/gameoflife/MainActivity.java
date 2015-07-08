@@ -37,22 +37,9 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 if (timer != null) {
-                    timer.cancel();
-                    timer = null;
-                    btnLoop.setText(getResources().getString(R.string.loop));
-                    btnLoop.setBackground(getResources().getDrawable(R.drawable.button_background));
-                    btnLoop.setTextColor(getResources().getColorStateList(R.color.button_text));
+                    stopLoop();
                 } else {
-                    timer = new Timer();
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            golCanvas.play();
-                        }
-                    }, 0, 100);
-                    btnLoop.setText(getResources().getString(R.string.stop));
-                    btnLoop.setBackground(getResources().getDrawable(R.drawable.button_background_inverted));
-                    btnLoop.setTextColor(getResources().getColorStateList(R.color.button_text_inverted));
+                    startLoop();
                 }
             }
         });
@@ -63,6 +50,35 @@ public class MainActivity extends FragmentActivity {
                 ruleDialog.show();
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopLoop();
+    }
+
+    private void stopLoop() {
+        if (timer != null) {
+            timer.cancel();
+        }
+        timer = null;
+        btnLoop.setText(getResources().getString(R.string.loop));
+        btnLoop.setBackground(getResources().getDrawable(R.drawable.button_background));
+        btnLoop.setTextColor(getResources().getColorStateList(R.color.button_text));
+    }
+
+    private void startLoop() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                golCanvas.play();
+            }
+        }, 0, 100);
+        btnLoop.setText(getResources().getString(R.string.stop));
+        btnLoop.setBackground(getResources().getDrawable(R.drawable.button_background_inverted));
+        btnLoop.setTextColor(getResources().getColorStateList(R.color.button_text_inverted));
     }
 
     @Override
