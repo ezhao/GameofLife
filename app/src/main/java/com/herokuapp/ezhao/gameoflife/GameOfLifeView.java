@@ -5,16 +5,20 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class GameOfLifeView extends View {
     private final int GRIDSIZE = 32;
+    private final String POINTS_KEY = "points";
+    private final String INSTANCE_STATE_KEY = "instanceState";
     private Paint pixelPaint;
     private Paint guidePaint;
     private int pixelSize;
-    private int[][] points;
+    private PointsArray[] points;
     private Path guidePath;
 
     public GameOfLifeView(Context context, AttributeSet attrs) {
@@ -29,7 +33,10 @@ public class GameOfLifeView extends View {
         guidePaint.setStrokeWidth(1);
         guidePaint.setColor(Color.LTGRAY);
 
-        points = new int[GRIDSIZE][GRIDSIZE];
+        points = new PointsArray[GRIDSIZE];
+        for (int i=0; i<GRIDSIZE; i++) {
+            points[i] = new PointsArray(GRIDSIZE);
+        }
     }
 
     public void play() {
@@ -37,7 +44,7 @@ public class GameOfLifeView extends View {
         int[][] liveNeighbors = new int[GRIDSIZE][GRIDSIZE];
         for (int x=0; x < GRIDSIZE; x++) {
             for (int y=0; y < GRIDSIZE; y++) {
-                if (points[x][y] == 1) {
+                if (points[x].get(y) == 1) {
                     if (x > 0) {
                         liveNeighbors[x-1][y] = liveNeighbors[x-1][y]+1;
                         if (y > 0) {
@@ -69,13 +76,13 @@ public class GameOfLifeView extends View {
         // Apply Game of Life rules en.wikipedia.org/wiki/Conway%27s_Game_of_Life
         for (int x=0; x < GRIDSIZE; x++) {
             for (int y = 0; y < GRIDSIZE; y++) {
-                if (points[x][y] == 0 && liveNeighbors[x][y] == 3) {
+                if (points[x].get(y) == 0 && liveNeighbors[x][y] == 3) {
                     // Dead cell with exactly 3 neighbors comes alive
-                    points[x][y] = 1;
-                } else if (points[x][y] == 1) {
+                    points[x].set(y, 1);
+                } else if (points[x].get(y) == 1) {
                     if (liveNeighbors[x][y] < 2 || liveNeighbors[x][y] > 3) {
                         // Live cell with too few or too many neighbors dies
-                        points[x][y] = 0;
+                        points[x].set(y, 0);
                     }
                     // Otherwise live cell stays alive
                 }
@@ -113,7 +120,7 @@ public class GameOfLifeView extends View {
         float coordX, coordY;
         for (int x=0; x < GRIDSIZE; x++) {
             for (int y=0; y < GRIDSIZE; y++) {
-                if (points[x][y] == 1) {
+                if (points[x].get(y) == 1) {
                     coordX = canvasSize/ GRIDSIZE * x + offsetLeft;
                     coordY = canvasSize/ GRIDSIZE * y + offsetTop;
                     canvas.drawRect(coordX, coordY, coordX+pixelSize, coordY+pixelSize, pixelPaint);
@@ -127,7 +134,7 @@ public class GameOfLifeView extends View {
         int x = Math.round((event.getX()-offsetLeft())/getCanvasSize()* GRIDSIZE);
         int y = Math.round((event.getY()-offsetTop())/getCanvasSize()* GRIDSIZE);
         if(x < GRIDSIZE && y < GRIDSIZE && x >= 0 && y >= 0) {
-            points[x][y] = 1;
+            points[x].set(y, 1);
         }
         postInvalidate();
         return true;
@@ -149,5 +156,23 @@ public class GameOfLifeView extends View {
             return (getWidth() - getHeight()) / 2;
         }
         return 0;
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArray(POINTS_KEY, points);
+        bundle.putParcelable(INSTANCE_STATE_KEY, super.onSaveInstanceState());
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            this.points = (PointsArray[]) bundle.getParcelableArray(POINTS_KEY);
+            state = bundle.getParcelable(INSTANCE_STATE_KEY);
+        }
+        super.onRestoreInstanceState(state);
     }
 }
