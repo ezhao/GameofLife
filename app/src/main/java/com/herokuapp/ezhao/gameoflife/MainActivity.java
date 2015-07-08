@@ -13,6 +13,7 @@ import java.util.TimerTask;
 public class MainActivity extends FragmentActivity {
     Button btnPlay;
     Button btnLoop;
+    Button btnRules;
     GameOfLifeView golCanvas;
     Timer timer;
 
@@ -23,6 +24,7 @@ public class MainActivity extends FragmentActivity {
 
         btnPlay = (Button) findViewById(R.id.btnPlay);
         btnLoop = (Button) findViewById(R.id.btnLoop);
+        btnRules = (Button) findViewById(R.id.btnRules);
         golCanvas = (GameOfLifeView) findViewById(R.id.golCanvas);
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +54,13 @@ public class MainActivity extends FragmentActivity {
                     btnLoop.setBackground(getResources().getDrawable(R.drawable.button_background_inverted));
                     btnLoop.setTextColor(getResources().getColorStateList(R.color.button_text_inverted));
                 }
+            }
+        });
+        btnRules.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RuleDialog ruleDialog = new RuleDialog(MainActivity.this);
+                ruleDialog.show();
             }
         });
     }

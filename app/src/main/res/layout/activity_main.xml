@@ -37,4 +37,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/btnRules"
+        android:background="@drawable/button_background"
+        android:textColor="@color/button_text"
+        android:text="@string/rules"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="2dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>
