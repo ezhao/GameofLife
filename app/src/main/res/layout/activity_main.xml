@@ -17,15 +17,21 @@
 
     <Button
         android:id="@+id/btnPlay"
+        android:background="@drawable/button_background"
+        android:textColor="@color/button_text"
         android:text="@string/play"
         android:layout_alignParentBottom="true"
+        android:layout_margin="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btnLoop"
+        android:background="@drawable/button_background"
+        android:textColor="@color/button_text"
         android:text="@string/loop"
         android:layout_alignParentBottom="true"
+        android:layout_margin="2dp"
         android:layout_toRightOf="@id/btnPlay"
         android:layout_toEndOf="@id/btnPlay"
         android:layout_width="wrap_content"

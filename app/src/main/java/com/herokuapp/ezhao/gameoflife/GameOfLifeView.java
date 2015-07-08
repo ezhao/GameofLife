@@ -20,7 +20,6 @@ public class GameOfLifeView extends View {
     public GameOfLifeView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        // Setup paint
         pixelPaint = new Paint();
         pixelPaint.setStyle(Paint.Style.FILL);
         pixelPaint.setColor(Color.BLACK);

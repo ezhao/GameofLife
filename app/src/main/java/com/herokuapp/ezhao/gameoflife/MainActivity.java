@@ -37,6 +37,9 @@ public class MainActivity extends FragmentActivity {
                 if (timer != null) {
                     timer.cancel();
                     timer = null;
+                    btnLoop.setText(getResources().getString(R.string.loop));
+                    btnLoop.setBackground(getResources().getDrawable(R.drawable.button_background));
+                    btnLoop.setTextColor(getResources().getColorStateList(R.color.button_text));
                 } else {
                     timer = new Timer();
                     timer.schedule(new TimerTask() {
@@ -45,6 +48,9 @@ public class MainActivity extends FragmentActivity {
                             golCanvas.play();
                         }
                     }, 0, 100);
+                    btnLoop.setText(getResources().getString(R.string.stop));
+                    btnLoop.setBackground(getResources().getDrawable(R.drawable.button_background_inverted));
+                    btnLoop.setTextColor(getResources().getColorStateList(R.color.button_text_inverted));
                 }
             }
         });
